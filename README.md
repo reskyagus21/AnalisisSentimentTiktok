@@ -26,7 +26,7 @@ A Django-based web application for analyzing sentiments of TikTok video comments
 1. **Clone the Repository**:
 
    ```bash
-   git clone 
+   git clone https://github.com/reskyagus21/AnalisisSentimentTiktok.git
    cd tiktok-sentiment-analysis
    ```
 
