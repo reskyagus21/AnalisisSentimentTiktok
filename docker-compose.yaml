@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name : tiktok_app
+    ports:
+      - "8000:8000"
+    command: gunicorn --bind 0.0.0.0:8000 Tiktok.wsgi:application
+    volumes:
+      - .:/app
+      - media:/app/media
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=Tiktok.settings
+      - MYSQL_HOST=db
+      - MYSQL_DATABASE=sentimentanalisis
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=12345
+      - MYSQL_PORT=3306
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0
+    volumes:
+      - mysql_data:/var/lib/mysql
+    container_name : tiktok_db
+    ports:
+      - "3000:3036"
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345
+      - MYSQL_DATABASE=sentimentanalisis
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+volumes:
+  media:
+  mysql_data:
+
+networks:
+  app-network:
+    driver: bridge
